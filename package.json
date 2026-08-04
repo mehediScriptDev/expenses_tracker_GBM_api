@@ -1,10 +1,16 @@
 {
-  "devDependencies": {
+  "scripts":{
+      "dev":"tsx watch src/server.ts",
+      "build":"tsc",
+      "start":"node dist/server.js"
+    },
+    "devDependencies": {
     "@types/node": "^26.1.2",
     "@types/pg": "^8.20.4",
     "prisma": "^7.9.1",
     "tsx": "^4.23.5",
     "typescript": "^7.0.2"
+    
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.1",
