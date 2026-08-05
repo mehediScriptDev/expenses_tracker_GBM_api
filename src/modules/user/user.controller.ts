@@ -1,7 +1,29 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import { userService } from "./user.service";
 
+type TMeta = {
+  page: number;
+  limit: number;
+  total: number;
+};
 
+type TResponseData<T>={
+    success: boolean;
+    status: number;
+    message: string;
+    data: T;
+    meta?: TMeta
+}
+
+const sendResonse = <T>(res:Response, data:TResponseData<T>) => {
+    res.status(data.status).json({
+        success: data.success,
+        status: data.status,
+        message: data.message,
+        data: data.data,
+        meta: data.meta
+    })
+}
 
 const createUser = async (req: Request, res: Response) => {
   try {
