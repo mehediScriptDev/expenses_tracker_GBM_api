@@ -1,29 +1,6 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import { userService } from "./user.service";
-
-type TMeta = {
-  page: number;
-  limit: number;
-  total: number;
-};
-
-type TResponseData<T>={
-    success: boolean;
-    status: number;
-    message: string;
-    data: T;
-    meta?: TMeta
-}
-
-const sendResonse = <T>(res:Response, data:TResponseData<T>) => {
-    res.status(data.status).json({
-        success: data.success,
-        status: data.status,
-        message: data.message,
-        data: data.data,
-        meta: data.meta
-    })
-}
+import { sendResponse } from "../../utils/sendResponse";
 
 const createUser = async (req: Request, res: Response) => {
   try {
@@ -31,14 +8,14 @@ const createUser = async (req: Request, res: Response) => {
 
     const user = await userService.registerUserIntoDb(payload);
 
-    res.status(201).json({
+    sendResponse(res,{
       success: true,
-      status: 201,
-      message: "User registration completed.",
+      status: 200,
+      message: "User registration successful.",
       data: user,
     });
   } catch (error) {
-    res.status(400).json({
+    sendResponse(res, {
       success: false,
       status: 400,
       message: "User registration failed.",

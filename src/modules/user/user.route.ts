@@ -4,5 +4,5 @@ import { userController } from "./user.controller";
 
 const router = Router();
 
-router.post("/api/users/register", userController.createUser );
+router.post("/register", userController.createUser );
 export const userRoutes = router;
