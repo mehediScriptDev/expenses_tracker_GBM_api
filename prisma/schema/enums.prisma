@@ -8,3 +8,7 @@ enum FeelingsType {
   LUXURY
   REGRET
 }
+enum AuthProvider {
+  GOOGLE
+  CREDENTIAL
+}

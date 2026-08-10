@@ -6,6 +6,16 @@ const createToken = (payload:JwtPayload,secret:string,expiresIn:SignOptions)=>{
     return token;
 }
 
+const verifyToken = (token:string,secret:string)=>{
+    try {
+        const verifiedToken = jwt.verify(token,secret)
+    return verifiedToken;
+    } catch (error) {
+        throw new Error("Something went wrong gorib")
+    }
+}
+
 export const jwtUtils={
-    createToken
+    createToken,
+    verifyToken
 }

@@ -28,6 +28,20 @@ sendResponse(res,{
 })
 })
 
+const googleLogin = catchasync(async(req:Request,res:Response)=>{
+
+    const payload = req.body;
+    const result = await authService.googleLogin(payload);
+
+    sendResponse(res,{
+        status:200,
+        success:true,
+        message:"Google login successful",
+        data:{}
+    })
+})
+
 export const authController = {
-    loginUser
+    loginUser,
+    googleLogin
 }
