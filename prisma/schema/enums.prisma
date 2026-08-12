@@ -2,12 +2,34 @@ enum TransactionType {
   INCOME
   EXPENSE
 }
-enum FeelingsType {
+
+enum CategoryKind {
+  INCOME
+  EXPENSE
+}
+
+enum Mood {
   NECESSARY
   HAPPY
   LUXURY
   REGRET
 }
+
+enum PaymentMethod {
+  CASH
+  BKASH
+  NAGAD
+  ROCKET
+  CARD
+  BANK
+  OTHER
+}
+
+enum LoanDirection {
+  BORROWED
+  LENT
+}
+
 enum AuthProvider {
   GOOGLE
   CREDENTIAL

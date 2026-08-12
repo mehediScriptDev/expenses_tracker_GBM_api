@@ -7,31 +7,162 @@ datasource db {
   provider = "postgresql"
 }
 
-model User { 
-  id    String  @id @default(uuid()) 
-  google_id String? @unique
-  auth_provider AuthProvider @default(CREDENTIAL)
-  name  String?
-  email String  @unique
-  password String
-  monthly_salary Int?
-  currency_type String?
-  transactions Transaction[]
+model User {
+  id             String       @id @default(uuid())
+  google_id      String?      @unique
+  auth_provider  AuthProvider @default(CREDENTIAL)
+  name           String?
+  email          String       @unique
+  password       String?
+
+  monthly_salary  Int?
+  salary_day      Int     @default(1)
+  currency_code   String  @default("BDT")
+  currency_symbol String  @default("৳")
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  categories         Category[]
+  transactions       Transaction[]
+  budgets            Budget[]
+  loans              Loan[]
+  goals              Goal[]
+  quick_add_presets  QuickAddPreset[]
+  notification_reads NotificationRead[]
 
   @@map("users")
-} 
+}
 
-model Transaction { 
-  id        String  @id @default(uuid()) 
-  category_id String
-  amount     Int
-  type   TransactionType @default(EXPENSE)
-  payment_method String?
-  feelings FeelingsType? @default(NECESSARY)
-  transaction_date DateTime @default(now())
-  user   User    @relation(fields: [user_id], references: [id]) 
-  user_id String
+model Category {
+  id         String       @id @default(uuid())
+  user_id    String
+  name       String
+  icon       String
+  color      String
+  kind       CategoryKind
+  is_custom  Boolean      @default(true)
+  system_key String?
 
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user              User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  transactions      Transaction[]
+  budgets           Budget[]
+  quick_add_presets QuickAddPreset[]
+
+  @@unique([user_id, system_key])
+  @@index([user_id, kind])
+  @@map("categories")
+}
+
+model Transaction {
+  id             String          @id @default(uuid())
+  user_id        String
+  category_id    String
+  type           TransactionType @default(EXPENSE)
+  amount         Int
+  description    String          @default("Untitled")
+  payment_method PaymentMethod
+  mood           Mood?
+  tags           String[]        @default([])
+  occurred_at    DateTime        @default(now())
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user     User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [category_id], references: [id], onDelete: Restrict)
+
+  @@index([user_id, occurred_at(sort: Desc)])
+  @@index([user_id, category_id])
+  @@index([user_id, type])
   @@map("transactions")
 }
 
+model Budget {
+  id            String @id @default(uuid())
+  user_id       String
+  category_id   String
+  monthly_limit Int
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user     User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [category_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, category_id])
+  @@map("budgets")
+}
+
+model Loan {
+  id            String        @id @default(uuid())
+  user_id       String
+  direction     LoanDirection
+  person        String
+  amount        Int
+  amount_repaid Int           @default(0)
+  started_on    DateTime      @db.Date
+  due_on        DateTime?     @db.Date
+  reason        String?
+  notes         String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id, direction])
+  @@index([user_id, due_on])
+  @@map("loans")
+}
+
+model Goal {
+  id             String    @id @default(uuid())
+  user_id        String
+  title          String
+  target_amount  Int
+  current_amount Int       @default(0)
+  target_date    DateTime? @db.Date
+  icon           String    @default("piggy-bank")
+  color          String    @default("var(--chart-4)")
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@map("goals")
+}
+
+model QuickAddPreset {
+  id             String        @id @default(uuid())
+  user_id        String
+  label          String
+  icon           String
+  amount         Int
+  category_id    String
+  payment_method PaymentMethod
+  sort_order     Int           @default(0)
+
+  user     User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [category_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@map("quick_add_presets")
+}
+
+model NotificationRead {
+  id               String   @id @default(uuid())
+  user_id          String
+  notification_key String
+  read_at          DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, notification_key])
+  @@map("notification_reads")
+}

@@ -1,29 +1,43 @@
-import { NextFunction, Request, RequestHandler, Response } from "express";
-import { userService } from "./user.service";
+import { Request, Response } from "express";
+import { catchasync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
+import { userService } from "./user.service";
 
-const createUser = async (req: Request, res: Response) => {
-  try {
-    const payload = req.body;
+const getProfile = catchasync(async (req: Request, res: Response) => {
+  const user = await userService.getProfile(req.user!.id);
 
-    const user = await userService.registerUserIntoDb(payload);
+  sendResponse(res, {
+    success: true,
+    status: 200,
+    message: "Profile fetched successfully.",
+    data: user,
+  });
+});
 
-    sendResponse(res,{
-      success: true,
-      status: 200,
-      message: "User registration successful.",
-      data: user,
-    });
-  } catch (error) {
-    sendResponse(res, {
-      success: false,
-      status: 400,
-      message: "User registration failed.",
-      data: null,
-    });
-  }
-};
+const updateProfile = catchasync(async (req: Request, res: Response) => {
+  const user = await userService.updateProfile(req.user!.id, req.body);
+
+  sendResponse(res, {
+    success: true,
+    status: 200,
+    message: "Profile updated successfully.",
+    data: user,
+  });
+});
+
+const changePassword = catchasync(async (req: Request, res: Response) => {
+  await userService.changePassword(req.user!.id, req.body);
+
+  sendResponse(res, {
+    success: true,
+    status: 200,
+    message: "Password updated successfully.",
+    data: null,
+  });
+});
 
 export const userController = {
-  createUser,
+  getProfile,
+  updateProfile,
+  changePassword,
 };

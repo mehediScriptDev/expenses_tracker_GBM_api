@@ -5,10 +5,13 @@ export const catchasync = (fn: RequestHandler) => {
     try {
       await fn(req, res, next);
     } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Something went wrong.";
+
       res.status(400).json({
         success: false,
         status: 400,
-        message: "User registration failed.",
+        message,
         data: null,
       });
     }
