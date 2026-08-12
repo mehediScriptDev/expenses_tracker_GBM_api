@@ -81,9 +81,52 @@ const getSpentByCategory = async (userId: string, categoryIds: string[]) => {
   );
 };
 
-const getBudgets = async (userId: string) => {
+const matchesBudgetStatus = (
+  budget: ReturnType<typeof formatBudget>,
+  status: string,
+) => {
+  if (!status || status === "all") {
+    return true;
+  }
+
+  if (status === "over") {
+    return budget.over;
+  }
+
+  if (status === "near-limit") {
+    return !budget.over && budget.pct >= 85;
+  }
+
+  if (status === "on-track") {
+    return !budget.over && budget.pct < 85;
+  }
+
+  return true;
+};
+
+const getBudgets = async (userId: string, query: any) => {
+  const page = Number(query.page) || 1;
+  const limit = Number(query.limit) || 10;
+
+  const where: any = {
+    user_id: userId,
+  };
+
+  if (query.category_id) {
+    where.category_id = query.category_id;
+  }
+
+  if (query.search) {
+    where.category = {
+      name: {
+        contains: query.search,
+        mode: "insensitive",
+      },
+    };
+  }
+
   const budgets = await prisma.budget.findMany({
-    where: { user_id: userId },
+    where,
     include: withCategory,
     orderBy: { created_at: "asc" },
   });
@@ -93,9 +136,24 @@ const getBudgets = async (userId: string) => {
     budgets.map((budget) => budget.category_id),
   );
 
-  return budgets.map((budget) =>
-    formatBudget(budget, spentMap[budget.category_id] ?? 0),
-  );
+  const status = query.status ?? "all";
+
+  const formatted = budgets
+    .map((budget) => formatBudget(budget, spentMap[budget.category_id] ?? 0))
+    .filter((budget) => matchesBudgetStatus(budget, status))
+    .sort((a, b) => b.pct - a.pct);
+
+  const total = formatted.length;
+  const skip = (page - 1) * limit;
+
+  return {
+    budgets: formatted.slice(skip, skip + limit),
+    meta: {
+      page,
+      limit,
+      total,
+    },
+  };
 };
 
 const createBudget = async (userId: string, payload: ICreateBudget) => {

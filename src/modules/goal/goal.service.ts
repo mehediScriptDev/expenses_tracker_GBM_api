@@ -24,6 +24,9 @@ const formatGoal = (goal: any) => {
 };
 
 const getGoals = async (userId: string, query: any) => {
+  const page = Number(query.page) || 1;
+  const limit = Number(query.limit) || 10;
+
   const where: any = {
     user_id: userId,
   };
@@ -40,17 +43,25 @@ const getGoals = async (userId: string, query: any) => {
     orderBy: { created_at: "desc" },
   });
 
-  const formatted = goals.map(formatGoal);
+  let formatted = goals.map(formatGoal);
 
   if (query.status === "completed") {
-    return formatted.filter((goal) => goal.completed);
+    formatted = formatted.filter((goal) => goal.completed);
+  } else if (query.status === "in-progress") {
+    formatted = formatted.filter((goal) => !goal.completed);
   }
 
-  if (query.status === "in-progress") {
-    return formatted.filter((goal) => !goal.completed);
-  }
+  const total = formatted.length;
+  const skip = (page - 1) * limit;
 
-  return formatted;
+  return {
+    goals: formatted.slice(skip, skip + limit),
+    meta: {
+      page,
+      limit,
+      total,
+    },
+  };
 };
 
 const createGoal = async (userId: string, payload: ICreateGoal) => {

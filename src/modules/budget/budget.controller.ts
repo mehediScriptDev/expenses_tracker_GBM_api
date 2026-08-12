@@ -4,13 +4,14 @@ import { sendResponse } from "../../utils/sendResponse";
 import { budgetService } from "./budget.service";
 
 const getBudgets = catchasync(async (req: Request, res: Response) => {
-  const budgets = await budgetService.getBudgets(req.user!.id);
+  const result = await budgetService.getBudgets(req.user!.id, req.query);
 
   sendResponse(res, {
     success: true,
     status: 200,
     message: "Budgets fetched successfully.",
-    data: budgets,
+    data: result.budgets,
+    meta: result.meta,
   });
 });
 

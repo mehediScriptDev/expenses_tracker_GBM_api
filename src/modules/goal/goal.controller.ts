@@ -4,13 +4,14 @@ import { sendResponse } from "../../utils/sendResponse";
 import { goalService } from "./goal.service";
 
 const getGoals = catchasync(async (req: Request, res: Response) => {
-  const goals = await goalService.getGoals(req.user!.id, req.query);
+  const result = await goalService.getGoals(req.user!.id, req.query);
 
   sendResponse(res, {
     success: true,
     status: 200,
     message: "Goals fetched successfully.",
-    data: goals,
+    data: result.goals,
+    meta: result.meta,
   });
 });
 
