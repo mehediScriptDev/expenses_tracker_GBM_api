@@ -55,6 +55,9 @@ const formatLoan = (loan: any) => {
 };
 
 const getLoans = async (userId: string, query: any) => {
+  const page = Number(query.page) || 1;
+  const limit = Number(query.limit) || 10;
+
   const where: any = {
     user_id: userId,
   };
@@ -85,13 +88,23 @@ const getLoans = async (userId: string, query: any) => {
     orderBy: { started_on: "desc" },
   });
 
-  const formatted = loans.map(formatLoan);
+  let formatted = loans.map(formatLoan);
 
   if (query.status && query.status !== "all") {
-    return formatted.filter((loan) => loan.status === query.status);
+    formatted = formatted.filter((loan) => loan.status === query.status);
   }
 
-  return formatted;
+  const total = formatted.length;
+  const skip = (page - 1) * limit;
+
+  return {
+    loans: formatted.slice(skip, skip + limit),
+    meta: {
+      page,
+      limit,
+      total,
+    },
+  };
 };
 
 const createLoan = async (userId: string, payload: ICreateLoan) => {

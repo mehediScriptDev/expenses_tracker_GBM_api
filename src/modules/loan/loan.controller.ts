@@ -4,13 +4,14 @@ import { sendResponse } from "../../utils/sendResponse";
 import { loanService } from "./loan.service";
 
 const getLoans = catchasync(async (req: Request, res: Response) => {
-  const loans = await loanService.getLoans(req.user!.id, req.query);
+  const result = await loanService.getLoans(req.user!.id, req.query);
 
   sendResponse(res, {
     success: true,
     status: 200,
     message: "Loans fetched successfully.",
-    data: loans,
+    data: result.loans,
+    meta: result.meta,
   });
 });
 

@@ -4,13 +4,14 @@ import { sendResponse } from "../../utils/sendResponse";
 import { categoryService } from "./category.service";
 
 const getCategories = catchasync(async (req: Request, res: Response) => {
-  const categories = await categoryService.getCategories(req.user!.id, req.query);
+  const result = await categoryService.getCategories(req.user!.id, req.query);
 
   sendResponse(res, {
     success: true,
     status: 200,
     message: "Categories fetched successfully.",
-    data: categories,
+    data: result.categories,
+    meta: result.meta,
   });
 });
 
@@ -55,13 +56,16 @@ const deleteCategory = catchasync(async (req: Request, res: Response) => {
 
 const seedDefaults = catchasync(async (req: Request, res: Response) => {
   await categoryService.seedDefaults(req.user!.id);
-  const categories = await categoryService.getCategories(req.user!.id, {});
+  const result = await categoryService.getCategories(req.user!.id, {
+    limit: 100,
+  });
 
   sendResponse(res, {
     success: true,
     status: 200,
     message: "Default categories seeded successfully.",
-    data: categories,
+    data: result.categories,
+    meta: result.meta,
   });
 });
 

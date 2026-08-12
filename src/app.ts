@@ -11,6 +11,7 @@ import { goalRoutes } from "./modules/goal/goal.route";
 import { quickAddRoutes } from "./modules/quick-add/quick-add.route";
 import { insightsRoutes } from "./modules/insights/insights.route";
 import { dashboardRoutes } from "./modules/dashboard/dashboard.route";
+import { notificationRoutes } from "./modules/notification/notification.route";
 
 const app: Application = express();
 
@@ -38,5 +39,6 @@ app.use("/api/goals", goalRoutes);
 app.use("/api/quick-adds", quickAddRoutes);
 app.use("/api/insights", insightsRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 export default app;

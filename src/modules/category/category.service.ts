@@ -25,6 +25,10 @@ const formatCategory = (category: any) => {
 };
 
 const getCategories = async (userId: string, query: any) => {
+  const page = Number(query.page) || 1;
+  const limit = Number(query.limit) || 10;
+  const skip = (page - 1) * limit;
+
   const where: any = {
     user_id: userId,
   };
@@ -40,12 +44,24 @@ const getCategories = async (userId: string, query: any) => {
     };
   }
 
-  const categories = await prisma.category.findMany({
-    where,
-    orderBy: { name: "asc" },
-  });
+  const [categories, total] = await Promise.all([
+    prisma.category.findMany({
+      where,
+      orderBy: { name: "asc" },
+      skip,
+      take: limit,
+    }),
+    prisma.category.count({ where }),
+  ]);
 
-  return categories.map(formatCategory);
+  return {
+    categories: categories.map(formatCategory),
+    meta: {
+      page,
+      limit,
+      total,
+    },
+  };
 };
 
 const createCategory = async (userId: string, payload: ICreateCategory) => {
