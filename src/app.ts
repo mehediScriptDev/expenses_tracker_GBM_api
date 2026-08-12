@@ -9,6 +9,8 @@ import { budgetRoutes } from "./modules/budget/budget.route";
 import { loanRoutes } from "./modules/loan/loan.route";
 import { goalRoutes } from "./modules/goal/goal.route";
 import { quickAddRoutes } from "./modules/quick-add/quick-add.route";
+import { insightsRoutes } from "./modules/insights/insights.route";
+import { dashboardRoutes } from "./modules/dashboard/dashboard.route";
 
 const app: Application = express();
 
@@ -34,5 +36,7 @@ app.use("/api/budgets", budgetRoutes);
 app.use("/api/loans", loanRoutes);
 app.use("/api/goals", goalRoutes);
 app.use("/api/quick-adds", quickAddRoutes);
+app.use("/api/insights", insightsRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 export default app;

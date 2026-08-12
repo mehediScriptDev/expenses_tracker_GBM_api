@@ -15,10 +15,12 @@ model User {
   email          String       @unique
   password       String?
 
-  monthly_salary  Int?
-  salary_day      Int     @default(1)
-  currency_code   String  @default("BDT")
-  currency_symbol String  @default("৳")
+  monthly_salary       Int?
+  salary_day           Int       @default(1)
+  currency_code        String    @default("BDT")
+  currency_symbol      String    @default("৳")
+  carry_over_balance   Int       @default(0)
+  current_cycle_start  DateTime?
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -30,6 +32,7 @@ model User {
   goals              Goal[]
   quick_add_presets  QuickAddPreset[]
   notification_reads NotificationRead[]
+  monthly_summaries  MonthlySummary[]
 
   @@map("users")
 }
@@ -165,4 +168,25 @@ model NotificationRead {
 
   @@unique([user_id, notification_key])
   @@map("notification_reads")
+}
+
+model MonthlySummary {
+  id                String @id @default(uuid())
+  user_id           String
+  year              Int
+  month             Int
+  total_income      Int
+  total_expenses    Int
+  net_saved         Int
+  transaction_count Int
+  top_categories    Json
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, year, month])
+  @@index([user_id, year, month])
+  @@map("monthly_summaries")
 }

@@ -4,6 +4,8 @@ import {
   PaymentMethod,
   TransactionType,
 } from "../../../generated/prisma/enums";
+import { monthRange } from "../../utils/dateRanges";
+import { cycleService } from "../cycle/cycle.service";
 import { ICreateTransaction, IUpdateTransaction } from "./transaction.types";
 
 const withCategory = {
@@ -33,6 +35,7 @@ const getTransactions = async (userId: string, query: any) => {
   const page = Number(query.page) || 1;
   const limit = Number(query.limit) || 10;
   const skip = (page - 1) * limit;
+  const scope = query.scope ?? "current_cycle";
 
   const where: any = {
     user_id: userId,
@@ -46,6 +49,20 @@ const getTransactions = async (userId: string, query: any) => {
     where.description = {
       contains: query.search,
       mode: "insensitive",
+    };
+  }
+
+  if (scope === "current_cycle") {
+    const { cycle } = await cycleService.ensureCycleRolled(userId);
+    where.occurred_at = {
+      gte: cycle.start,
+      lt: cycle.end,
+    };
+  } else if (scope === "current_month") {
+    const month = monthRange();
+    where.occurred_at = {
+      gte: month.start,
+      lt: month.end,
     };
   }
 
@@ -70,6 +87,8 @@ const getTransactions = async (userId: string, query: any) => {
 };
 
 const createTransaction = async (userId: string, payload: ICreateTransaction) => {
+  await cycleService.ensureCycleRolled(userId);
+
   const amount = Math.round(payload.amount);
 
   if (!amount || amount <= 0) {

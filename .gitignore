@@ -3,3 +3,6 @@ node_modules
 /generated/prisma
 .env
 personal-expense-tracker/
+dist/
+src/**/*.js
+prisma.config.js
