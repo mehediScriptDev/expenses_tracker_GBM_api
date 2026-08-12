@@ -88,6 +88,10 @@ const loginUser = async (payload: ILoginUser) => {
 };
 
 const googleLogin = async (payload: IGoogleLoginPayload) => {
+  if (!config.google_client_id) {
+    throw new Error("Google sign-in is not configured on the server.");
+  }
+
   let googleIdTokenPayload: TokenPayload | null | undefined = null;
 
   try {
@@ -97,8 +101,8 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
     });
     googleIdTokenPayload = ticket.getPayload();
   } catch (error) {
-    console.log("Google id token verififation failed", error);
-    throw new Error("Invalid or something wrong");
+    console.log("Google id token verification failed", error);
+    throw new Error("Google sign-in failed. Check that client IDs match on frontend and backend.");
   }
 
   if (!googleIdTokenPayload?.email) {

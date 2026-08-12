@@ -20,14 +20,28 @@ const withCategory = {
   },
 };
 
+const wallClockToDate = (date: string, time: string) => {
+  const [y, mo, d] = date.split("-").map(Number);
+  const [hh, mm] = time.split(":").map(Number);
+  return new Date(Date.UTC(y, mo - 1, d, hh, mm));
+};
+
+const formatWallClock = (value: Date) => {
+  const date = `${value.getUTCFullYear()}-${String(value.getUTCMonth() + 1).padStart(2, "0")}-${String(value.getUTCDate()).padStart(2, "0")}`;
+  const time = `${String(value.getUTCHours()).padStart(2, "0")}:${String(value.getUTCMinutes()).padStart(2, "0")}`;
+  return { date, time };
+};
+
 const formatTx = (tx: any) => {
+  const wallClock = formatWallClock(tx.occurred_at);
+
   return {
     ...tx,
     type: tx.type.toLowerCase(),
     payment_method: tx.payment_method.toLowerCase(),
     mood: tx.mood ? tx.mood.toLowerCase() : null,
-    date: tx.occurred_at.toISOString().slice(0, 10),
-    time: tx.occurred_at.toTimeString().slice(0, 5),
+    date: wallClock.date,
+    time: wallClock.time,
   };
 };
 
@@ -120,7 +134,7 @@ const createTransaction = async (userId: string, payload: ICreateTransaction) =>
         type === TransactionType.EXPENSE && payload.mood
           ? (payload.mood.toUpperCase() as Mood)
           : null,
-      occurred_at: new Date(`${payload.date}T${payload.time}:00`),
+      occurred_at: wallClockToDate(payload.date, payload.time),
     },
     include: withCategory,
   });
@@ -160,7 +174,7 @@ const updateTransaction = async (
           : existing.mood,
       occurred_at:
         payload.date && payload.time
-          ? new Date(`${payload.date}T${payload.time}:00`)
+          ? wallClockToDate(payload.date, payload.time)
           : existing.occurred_at,
     },
     include: withCategory,

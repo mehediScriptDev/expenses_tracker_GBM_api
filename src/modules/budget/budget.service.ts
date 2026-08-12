@@ -1,5 +1,6 @@
 import { prisma } from "../../lib/prisma";
 import { CategoryKind, TransactionType } from "../../../generated/prisma/enums";
+import { monthRange } from "../../utils/dateRanges";
 import { ICreateBudget, IUpdateBudget } from "./budget.types";
 
 const withCategory = {
@@ -14,13 +15,7 @@ const withCategory = {
   },
 };
 
-const getMonthRange = () => {
-  const now = new Date();
-  const start = new Date(now.getFullYear(), now.getMonth(), 1);
-  const end = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-
-  return { start, end };
-};
+const getMonthRange = () => monthRange();
 
 const formatBudget = (budget: any, spent = 0) => {
   const remaining = budget.monthly_limit - spent;

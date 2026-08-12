@@ -1,6 +1,9 @@
 import { prisma } from "../../lib/prisma";
 import { TransactionType } from "../../../generated/prisma/enums";
-import { monthRange, monthRangeFor } from "../../utils/dateRanges";
+import {
+  currentCalendarMonth,
+  monthRangeFor,
+} from "../../utils/dateRanges";
 import { IMonthlySummary, ITopCategorySummary } from "./insights.types";
 
 const formatSummary = (
@@ -149,9 +152,7 @@ const getSummaries = async (userId: string) => {
     orderBy: [{ year: "desc" }, { month: "desc" }],
   });
 
-  const now = new Date();
-  const currentYear = now.getFullYear();
-  const currentMonth = now.getMonth() + 1;
+  const { year: currentYear, month: currentMonth } = currentCalendarMonth();
 
   const hasCurrentArchived = archived.some(
     (summary) => summary.year === currentYear && summary.month === currentMonth,
@@ -188,9 +189,9 @@ const getSummary = async (userId: string, year: number, month: number) => {
     return formatSummary(archived, true);
   }
 
-  const now = new Date();
+  const { year: currentYear, month: currentMonth } = currentCalendarMonth();
 
-  if (year === now.getFullYear() && month === now.getMonth() + 1) {
+  if (year === currentYear && month === currentMonth) {
     return buildLiveMonthSummary(userId, year, month);
   }
 
@@ -213,8 +214,8 @@ const getSummary = async (userId: string, year: number, month: number) => {
 };
 
 const getCurrentMonth = async (userId: string) => {
-  const now = new Date();
-  return buildLiveMonthSummary(userId, now.getFullYear(), now.getMonth() + 1);
+  const { year, month } = currentCalendarMonth();
+  return buildLiveMonthSummary(userId, year, month);
 };
 
 export const insightsService = {
