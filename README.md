@@ -72,14 +72,13 @@ Server starts at `http://localhost:5000` (or your `PORT`).
 |----------|----------|-------------|
 | `DATABASE_URL` | Yes | PostgreSQL connection string |
 | `PORT` | No | Server port (default `5000`) |
-| `APP_URL` | Yes | Frontend origin for CORS (e.g. `http://localhost:3000`) |
+| `FRONTEND_URL` | Yes | Frontend origin for CORS (e.g. `http://localhost:3000`) |
 | `JWT_ACCESS_SECRET` | Yes | Secret for access tokens |
 | `JWT_REFRESH_SECRET` | Yes | Secret for refresh tokens |
 | `JWT_ACCESS_EXPIRES_IN` | Yes | e.g. `15m` |
 | `JWT_REFRESH_EXPIRES_IN` | Yes | e.g. `7d` |
 | `BCRYPT_SALT_ROUNDS` | Yes | e.g. `10` |
 | `GOOGLE_CLIENT_ID` | Yes* | Google OAuth client ID |
-| `FRONTEND_URL` | No | Frontend URL (if different from `APP_URL`) |
 
 \* Required only if using Google login.
 
@@ -409,7 +408,7 @@ API accepts lowercase; database stores uppercase.
 
 - [ ] Set strong `JWT_*_SECRET` values
 - [ ] Run `npx prisma migrate deploy` against the **direct** DB URL
-- [ ] Set `APP_URL` to your production frontend origin
+- [ ] Set `FRONTEND_URL` to your production frontend origin
 - [ ] Use `npm run build && npm start` (not `tsx`) in production
 - [ ] Configure HTTPS so httpOnly cookies work correctly
 
