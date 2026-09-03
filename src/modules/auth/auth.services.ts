@@ -5,7 +5,7 @@ import { prisma } from "../../lib/prisma";
 import config from "../../config";
 import { jwtUtils } from "../../utils/jwt";
 import { googleClient } from "../../lib/googleAuth";
-import { AuthProvider } from "../../../generated/prisma/enums";
+import { AuthProvider } from "../../generated/prisma/enums";
 import { categoryService } from "../category/category.service";
 import { quickAddService } from "../quick-add/quick-add.service";
 import { IGoogleLoginPayload, ILoginUser, IRegisterUser } from "./auth.types";

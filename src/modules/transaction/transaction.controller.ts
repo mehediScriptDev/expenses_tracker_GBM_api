@@ -30,9 +30,10 @@ const createTransaction = catchasync(async (req: Request, res: Response) => {
 });
 
 const updateTransaction = catchasync(async (req: Request, res: Response) => {
+  const id = req.params.id as string;
   const transaction = await transactionService.updateTransaction(
     req.user!.id,
-    req.params.id,
+    id,
     req.body,
   );
 
@@ -45,7 +46,8 @@ const updateTransaction = catchasync(async (req: Request, res: Response) => {
 });
 
 const deleteTransaction = catchasync(async (req: Request, res: Response) => {
-  await transactionService.deleteTransaction(req.user!.id, req.params.id);
+  const id = req.params.id as string;
+  await transactionService.deleteTransaction(req.user!.id, id);
 
   sendResponse(res, {
     success: true,
@@ -56,9 +58,10 @@ const deleteTransaction = catchasync(async (req: Request, res: Response) => {
 });
 
 const duplicateTransaction = catchasync(async (req: Request, res: Response) => {
+  const id = req.params.id as string;
   const transaction = await transactionService.duplicateTransaction(
     req.user!.id,
-    req.params.id,
+    id,
   );
 
   sendResponse(res, {

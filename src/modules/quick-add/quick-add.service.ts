@@ -1,5 +1,5 @@
 import { prisma } from "../../lib/prisma";
-import { PaymentMethod } from "../../../generated/prisma/enums";
+import { PaymentMethod } from "../../generated/prisma/enums";
 import { ICreateQuickAdd, IUpdateQuickAdd } from "./quick-add.types";
 
 const DEFAULT_PRESETS = [

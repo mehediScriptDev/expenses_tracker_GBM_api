@@ -3,7 +3,7 @@ import {
   Mood,
   PaymentMethod,
   TransactionType,
-} from "../../../generated/prisma/enums";
+} from "../../generated/prisma/enums";
 import { monthRange } from "../../utils/dateRanges";
 import { cycleService } from "../cycle/cycle.service";
 import { ICreateTransaction, IUpdateTransaction } from "./transaction.types";

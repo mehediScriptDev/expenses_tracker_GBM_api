@@ -1,5 +1,5 @@
 import { prisma } from "../../lib/prisma";
-import { LoanDirection, TransactionType } from "../../../generated/prisma/enums";
+import { LoanDirection, TransactionType } from "../../generated/prisma/enums";
 import { monthRange } from "../../utils/dateRanges";
 import { INotification, IMarkRead, NotificationType } from "./notification.types";
 

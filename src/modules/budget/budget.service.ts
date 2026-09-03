@@ -1,5 +1,5 @@
 import { prisma } from "../../lib/prisma";
-import { CategoryKind, TransactionType } from "../../../generated/prisma/enums";
+import { CategoryKind, TransactionType } from "../../generated/prisma/enums";
 import { monthRange } from "../../utils/dateRanges";
 import { ICreateBudget, IUpdateBudget } from "./budget.types";
 

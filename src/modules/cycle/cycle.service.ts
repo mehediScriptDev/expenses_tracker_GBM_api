@@ -1,5 +1,5 @@
 import { prisma } from "../../lib/prisma";
-import { TransactionType } from "../../../generated/prisma/enums";
+import { TransactionType } from "../../generated/prisma/enums";
 import { DateRange, nextCycleStart, payCycle } from "../../utils/dateRanges";
 
 const aggregateCycleTotals = async (userId: string, range: DateRange) => {

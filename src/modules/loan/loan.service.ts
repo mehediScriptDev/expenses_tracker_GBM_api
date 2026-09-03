@@ -1,5 +1,5 @@
 import { prisma } from "../../lib/prisma";
-import { LoanDirection } from "../../../generated/prisma/enums";
+import { LoanDirection } from "../../generated/prisma/enums";
 import { ICreateLoan, IRepayLoan, IUpdateLoan } from "./loan.types";
 
 const toDateString = (value: Date | null) => {

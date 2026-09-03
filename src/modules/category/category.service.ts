@@ -1,5 +1,5 @@
 import { prisma } from "../../lib/prisma";
-import { CategoryKind } from "../../../generated/prisma/enums";
+import { CategoryKind } from "../../generated/prisma/enums";
 import { ICreateCategory, IUpdateCategory } from "./category.types";
 
 const DEFAULT_CATEGORIES = [

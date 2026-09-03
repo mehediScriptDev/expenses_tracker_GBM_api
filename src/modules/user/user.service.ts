@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import { prisma } from "../../lib/prisma";
 import config from "../../config";
-import { AuthProvider } from "../../../generated/prisma/enums";
+import { AuthProvider } from "../../generated/prisma/enums";
 import { IChangePassword, IUpdateProfile } from "./user.types";
 
 const safeUser = <T extends { password?: string | null }>(user: T) => {
