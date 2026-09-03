@@ -1,7 +1,8 @@
 {
+  "packageManager": "npm@11.17.0",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsc",
+    "build": "prisma generate && tsc",
     "start": "node dist/server.js"
   },
   "devDependencies": {
@@ -25,5 +26,10 @@
     "google-auth-library": "^11.0.0",
     "jsonwebtoken": "^9.0.3",
     "pg": "^8.22.0"
+  },
+  "allowScripts": {
+    "prisma@7.9.1": true,
+    "@prisma/engines@7.9.1": true,
+    "esbuild@0.28.1": true
   }
 }
