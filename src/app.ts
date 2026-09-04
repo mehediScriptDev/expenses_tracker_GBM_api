@@ -19,9 +19,20 @@ const app: Application = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+const allowedOrigins = [
+  config.frontend_url,
+  "http://localhost:3000",
+  "https://gorib-manush.vercel.app",
+].filter(Boolean) as string[];
+
 app.use(
   cors({
-    origin: config.frontend_url,
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(null, true);
+    },
     credentials: true,
   }),
 );
