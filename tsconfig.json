@@ -4,7 +4,7 @@
     "target": "ES2022",
     "strict": true,
     "esModuleInterop": true,
-    "types": ["node"],
+    "skipLibCheck": true,
     "rootDir": "./src",
     "outDir": "dist"
   },

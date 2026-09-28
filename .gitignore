@@ -1,8 +1,8 @@
 node_modules
 
 /src/generated
-.env
 personal-expense-tracker/
 dist/
 src/**/*.js
 prisma.config.js
+config.bat
