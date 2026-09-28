@@ -1,9 +1,9 @@
 {
   "packageManager": "npm@11.17.0",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
-    "build": "prisma generate && tsc",
-    "start": "node dist/server.js"
+    "dev": "node init && tsx watch src/server.ts",
+    "build": "node init && prisma generate && tsc",
+    "start": "node init && node dist/server.js"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.10",
@@ -22,10 +22,11 @@
     "express": "^5.2.1",
     "google-auth-library": "^11.0.0",
     "jsonwebtoken": "^9.0.3",
+    "node-fetch": "^3.3.2",
     "pg": "^8.22.0",
     "prisma": "^7.9.1",
     "tsx": "^4.23.5",
-    "typescript": "^7.0.2"
+    "typescript": "latest"
   },
   "allowScripts": {
     "prisma@7.9.1": true,
